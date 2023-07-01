@@ -5,9 +5,10 @@ Camera::Camera() {
     position = glm::vec3(0.0f, 0.0f, 3.0f);
     worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     front = glm::vec3(0.0f, 0.0f, -1.0f);
-    speed = 2.5f;
+    speed = 5.5f;
     yaw = -90.0f;
     pitch = 0.0f;
+    zoom = 45.0f;
     updateCameraVectors();
 }
 
@@ -49,6 +50,14 @@ void Camera::processMouseMovement(float xoffset, float yoffset, bool constrainPi
 
     // update front, right and up vectors using the updated euler angles
     updateCameraVectors();
+}
+
+void Camera::processMouseScroll(float yoffset) {
+    zoom -= yoffset;
+    if (zoom < 1.0f)
+        zoom = 1.0f;
+    if (zoom > 45.0f)
+        zoom = 45.0f;
 }
 
 void Camera::updateCameraVectors() {

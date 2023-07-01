@@ -14,6 +14,7 @@ InputManager::InputManager(GLFWwindow* win, Camera* cam) {
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 }
 
 void InputManager::update(float deltaTime) {
@@ -63,4 +64,8 @@ void InputManager::key_callback(GLFWwindow* window, int key, int scancode, int a
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
         autoRotate = !autoRotate;
     }
+}
+
+void InputManager::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    camera->processMouseScroll(yoffset);
 }

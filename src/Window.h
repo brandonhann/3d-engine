@@ -1,10 +1,11 @@
 #pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Camera.h"
 
 class Window {
 public:
-    Window(int width, int height, const char* title);
+    Window(int width, int height, const char* title, Camera* cam);
     int getWidth();
     int getHeight();
     ~Window();
@@ -15,4 +16,5 @@ public:
 
 private:
     GLFWwindow* window;
+    Camera* camera;
 };

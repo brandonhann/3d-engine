@@ -13,6 +13,7 @@ public:
     float speed;
     float yaw;
     float pitch;
+    float zoom;
 
     Camera();
     void moveForward(float deltaTime);
@@ -22,6 +23,7 @@ public:
     glm::mat4 getViewMatrix();
     void processMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
     void updateCameraVectors();
+    void processMouseScroll(float yoffset);
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "Application.h"
 
-Application::Application() : window(640, 480, "3D Engine"), shader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl"), inputManager(window.getWindow(), &camera) {
+Application::Application() : window(640, 480, "3D Engine", &camera), shader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl"), inputManager(window.getWindow(), &camera) {
     shader.use();
 }
 
@@ -19,7 +19,7 @@ void Application::run() {
 
         // update the projection matrix
         double aspectRatio = ((double)window.getWidth()) / window.getHeight(); // window width / height
-        glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), (float)aspectRatio, 0.1f, 100.0f);
+        glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.zoom), (float)aspectRatio, 0.1f, 100.0f);
         shader.setMat4("projection", projectionMatrix);
 
         // update the view matrix
@@ -35,3 +35,4 @@ void Application::run() {
         window.pollEvents();
     }
 }
+

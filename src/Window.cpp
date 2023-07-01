@@ -1,15 +1,13 @@
 #include "Window.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "glm/ext.hpp"
-#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 
-Window::Window(int width, int height, const char* title) {
+Window::Window(int width, int height, const char* title, Camera* cam) {
     // initialize GLFW
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW");
@@ -35,11 +33,7 @@ Window::Window(int width, int height, const char* title) {
     // enable depth test
     glEnable(GL_DEPTH_TEST);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    double aspectRatio = ((double)width) / height; // window width / height
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), (float)aspectRatio, 0.1f, 100.0f);
-    glMatrixMode(GL_MODELVIEW);
+    camera = cam;
 }
 
 Window::~Window() {
