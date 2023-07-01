@@ -5,11 +5,19 @@
 #include "Cube.h"
 #include "Camera.h"
 #include <iostream>
-
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
+double lastX = 0.0;
+double lastY = 0.0;
+bool firstMouse = true;
+float lastFrame = 0.0f;
+bool rightButtonPressed = false;
+bool autoRotate = false;
+
+Camera camera;
 
 std::string readShaderFile(const char* filePath) {
     std::string content;
@@ -55,6 +63,45 @@ GLuint loadShader(const char* vertexShaderPath, const char* fragmentShaderPath) 
     return shaderProgram;
 }
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    if (!rightButtonPressed && !autoRotate) {
+        return;
+    }
+
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    double xoffset = xpos - lastX;
+    double yoffset = lastY - ypos;
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.processMouseMovement(xoffset, yoffset);
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+        if (action == GLFW_PRESS) {
+            rightButtonPressed = true;
+        }
+        else if (action == GLFW_RELEASE) {
+            rightButtonPressed = false;
+            firstMouse = true; // reset mouse state
+        }
+    }
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        autoRotate = !autoRotate;
+    }
+}
+
+
 int main() {
     // initialize GLFW
     if (!glfwInit()) {
@@ -84,30 +131,25 @@ int main() {
     GLuint shaderProgram = loadShader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl");
     glUseProgram(shaderProgram);
 
-
     // enable depth test
     glEnable(GL_DEPTH_TEST);
 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
     double aspectRatio = ((double)640) / 480; // window width / height
     glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), (float)aspectRatio, 0.1f, 100.0f);
-    // use the handle of the uniform location in the shader program for the projection matrix
-    GLint projLoc = glGetUniformLocation(shaderProgram, "projection");
-    if (projLoc != -1) {
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-    }
-    else {
-        std::cerr << "Failed to find projection uniform in shader" << std::endl;
-    }
-
-
+    glMatrixMode(GL_MODELVIEW);
 
     Cube cube;
 
-    Camera camera;
+    // register mouse callback
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     while (!glfwWindowShouldClose(window)) {
-        float deltaTime = glfwGetTime();
-        glfwSetTime(0.0);
+        float currentFrame = glfwGetTime(); // compute current frame time
+        float deltaTime = currentFrame - lastFrame; // compute deltaTime
+        lastFrame = currentFrame; // set current frame time to lastFrame for the next loop iteration
 
         // camera controls
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -127,12 +169,16 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), (float)aspectRatio, 0.1f, 100.0f);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
         cube.drawCube();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    glfwDestroyWindow(window);
     glfwTerminate();
 
     return 0;
