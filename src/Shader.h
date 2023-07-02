@@ -10,6 +10,7 @@ public:
     GLuint getProgramID();
     void setMat4(const std::string& name, const glm::mat4& mat) const;
     void setVec4(const std::string& name, const glm::vec4& vec) const;
+    void setVec3(const std::string& name, const glm::vec3& vec) const;
 
 private:
     std::string readShaderFile(const char* filePath);
