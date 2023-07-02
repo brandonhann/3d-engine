@@ -1,4 +1,3 @@
-// Cube.h
 #ifndef CUBE_H
 #define CUBE_H
 

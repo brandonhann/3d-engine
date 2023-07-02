@@ -2,22 +2,40 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 Camera::Camera() {
-    position = glm::vec3(0.0f, 0.0f, 3.0f);
+    position = glm::vec3(0.0f, 1.5f, 3.0f);
     worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     front = glm::vec3(0.0f, 0.0f, -1.0f);
     speed = 5.5f;
     yaw = -90.0f;
     pitch = 0.0f;
+    savedYaw = yaw;
+    savedPitch = pitch;
     zoom = 45.0f;
+    isWalkingMode = true;
+    savedPosition = position;
     updateCameraVectors();
 }
 
 void Camera::moveForward(float deltaTime) {
-    position += speed * deltaTime * front;
+    if (isWalkingMode) {
+        glm::vec3 forward = front;
+        forward.y = 0; // restrict y-axis movement
+        position += speed * deltaTime * glm::normalize(forward);
+    }
+    else {
+        position += speed * deltaTime * front;
+    }
 }
 
 void Camera::moveBackward(float deltaTime) {
-    position -= speed * deltaTime * front;
+    if (isWalkingMode) {
+        glm::vec3 backward = front;
+        backward.y = 0; // restrict y-axis movement
+        position -= speed * deltaTime * glm::normalize(backward);
+    }
+    else {
+        position -= speed * deltaTime * front;
+    }
 }
 
 void Camera::moveLeft(float deltaTime) {
@@ -29,8 +47,14 @@ void Camera::moveRight(float deltaTime) {
 }
 
 glm::mat4 Camera::getViewMatrix() {
-    return glm::lookAt(position, position + front, up);
+    if (isWalkingMode) {
+        return glm::lookAt(position, position + viewingFront, up);
+    }
+    else {
+        return glm::lookAt(position, position + front, up);
+    }
 }
+
 
 void Camera::processMouseMovement(float xoffset, float yoffset, bool constrainPitch) {
     float sensitivity = 0.1f;
@@ -38,7 +62,10 @@ void Camera::processMouseMovement(float xoffset, float yoffset, bool constrainPi
     yoffset *= sensitivity;
 
     yaw += xoffset;
-    pitch += yoffset;
+
+    if (!isWalkingMode || (isWalkingMode && pitch + yoffset >= -89.0f && pitch + yoffset <= 89.0f)) {
+        pitch += yoffset;
+    }
 
     // when pitch is out of bounds, screen doesn't get flipped
     if (constrainPitch) {
@@ -52,6 +79,7 @@ void Camera::processMouseMovement(float xoffset, float yoffset, bool constrainPi
     updateCameraVectors();
 }
 
+
 void Camera::processMouseScroll(float yoffset) {
     zoom -= yoffset;
     if (zoom < 1.0f)
@@ -64,11 +92,20 @@ void Camera::updateCameraVectors() {
     // calculate the new front vector
     glm::vec3 newFront;
     newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    newFront.y = sin(glm::radians(pitch));
     newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    newFront.y = sin(glm::radians(pitch));
+
+    if (isWalkingMode) {
+        // When in walking mode, calculate a second "viewing" front vector for use with glm::lookAt()
+        viewingFront = glm::normalize(newFront);
+
+        // The "movement" front vector should be level with the ground in walking mode
+        newFront.y = 0.0f;
+    }
+
     front = glm::normalize(newFront);
 
     // also re-calculate the right and up vector
-    right = glm::normalize(glm::cross(front, worldUp)); // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+    right = glm::normalize(glm::cross(front, worldUp));
     up = glm::normalize(glm::cross(right, front));
 }

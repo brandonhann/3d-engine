@@ -10,10 +10,15 @@ public:
     glm::vec3 up;
     glm::vec3 right;
     glm::vec3 worldUp;
+    glm::vec3 viewingFront;
+    glm::vec3 savedPosition;
     float speed;
     float yaw;
     float pitch;
+    float savedYaw;
+    float savedPitch;
     float zoom;
+    bool isWalkingMode;
 
     Camera();
     void moveForward(float deltaTime);

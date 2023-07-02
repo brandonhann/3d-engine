@@ -47,7 +47,7 @@ GLuint Shader::loadShader(const char* vertexShaderPath, const char* fragmentShad
     glCompileShader(vertexShader);
     glCompileShader(fragmentShader);
 
-    // Check vertex shader
+    // check vertex shader
     int success;
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -57,7 +57,7 @@ GLuint Shader::loadShader(const char* vertexShaderPath, const char* fragmentShad
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    // Check fragment shader
+    // check fragment shader
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
@@ -70,7 +70,7 @@ GLuint Shader::loadShader(const char* vertexShaderPath, const char* fragmentShad
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
-    // Check shader program
+    // check shader program
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);

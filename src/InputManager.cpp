@@ -29,7 +29,7 @@ void InputManager::update(float deltaTime) {
 }
 
 void InputManager::mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (!rightButtonPressed && !autoRotate) {
+    if (!rightButtonPressed && !autoRotate && !camera->isWalkingMode) {
         return;
     }
 
@@ -48,6 +48,7 @@ void InputManager::mouse_callback(GLFWwindow* window, double xpos, double ypos) 
     camera->processMouseMovement(xoffset, yoffset);
 }
 
+
 void InputManager::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_RIGHT) {
         if (action == GLFW_PRESS) {
@@ -63,6 +64,22 @@ void InputManager::mouse_button_callback(GLFWwindow* window, int button, int act
 void InputManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
         autoRotate = !autoRotate;
+    }
+    if (key == GLFW_KEY_C && action == GLFW_PRESS) { // C for Camera mode
+        if (camera->isWalkingMode) {
+            // Switching from walking mode to free mode, save the current camera state
+            camera->savedPosition = camera->position;
+            camera->savedYaw = camera->yaw;
+            camera->savedPitch = camera->pitch;
+        }
+        else {
+            // Switching from free mode to walking mode, restore the saved camera state
+            camera->position = glm::vec3(camera->savedPosition.x, 1.5f, camera->savedPosition.z); // preserve x and z coordinates, adjust y
+            camera->yaw = camera->savedYaw;
+            camera->pitch = camera->savedPitch;
+            camera->updateCameraVectors(); // update camera vectors after modifying yaw and pitch
+        }
+        camera->isWalkingMode = !camera->isWalkingMode;
     }
 }
 
