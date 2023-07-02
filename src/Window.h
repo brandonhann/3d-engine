@@ -5,7 +5,7 @@
 
 class Window {
 public:
-    Window(int width, int height, const char* title, Camera* cam);
+    Window(Camera* cam);
     int getWidth();
     int getHeight();
     ~Window();
@@ -13,8 +13,10 @@ public:
     void swapBuffers();
     void pollEvents();
     GLFWwindow* getWindow();
+    static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 private:
     GLFWwindow* window;
     Camera* camera;
+    void setViewportSize(int width, int height);
 };

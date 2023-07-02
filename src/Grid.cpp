@@ -9,7 +9,7 @@ Grid::Grid(Shader& shader, float width, float length, float cellSize)
 {
     std::vector<GLfloat> vertices;
 
-    // Calculate vertices for lines along x-axis
+    // vertices for lines along x-axis
     for (float i = -length / 2; i <= length / 2; i += cellSize) {
         vertices.push_back(-width / 2);
         vertices.push_back(0.0f);
@@ -20,7 +20,7 @@ Grid::Grid(Shader& shader, float width, float length, float cellSize)
         vertices.push_back(i);
     }
 
-    // Calculate vertices for lines along z-axis
+    // vertices for lines along z-axis
     for (float i = -width / 2; i <= width / 2; i += cellSize) {
         vertices.push_back(i);
         vertices.push_back(0.0f);

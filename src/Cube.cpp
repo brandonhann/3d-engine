@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-// Cube vertices
+// cube vertices
 GLfloat vertices[] = {
     // Front Face
     -1.0f, -1.0f, 1.0f,
@@ -67,5 +67,5 @@ void Cube::setupCube() {
     glBindVertexArray(VAO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
-    glBindVertexArray(0); // Unbind VAO
+    glBindVertexArray(0); // unbind VAO
 }

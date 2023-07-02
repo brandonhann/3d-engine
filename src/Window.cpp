@@ -7,14 +7,17 @@
 #include <sstream>
 #include <stdexcept>
 
-Window::Window(int width, int height, const char* title, Camera* cam) {
+
+Window::Window(Camera* cam) {
     // initialize GLFW
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW");
     }
 
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
     // create a windowed mode window and its OpenGL context
-    window = glfwCreateWindow(width, height, title, NULL, NULL);
+    window = glfwCreateWindow(mode->width, mode->height, "3D Engine", NULL, NULL);
     if (!window) {
         glfwTerminate();
         throw std::runtime_error("Failed to create GLFW window");
@@ -22,6 +25,9 @@ Window::Window(int width, int height, const char* title, Camera* cam) {
 
     // make the window's context current
     glfwMakeContextCurrent(window);
+
+    // set the framebuffer size callback
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
     // initialize GLEW
     glewExperimental = GL_TRUE;
@@ -34,11 +40,22 @@ Window::Window(int width, int height, const char* title, Camera* cam) {
     glEnable(GL_DEPTH_TEST);
 
     camera = cam;
+
+    // set the initial viewport size
+    setViewportSize(mode->width, mode->height);
 }
 
 Window::~Window() {
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+void Window::setViewportSize(int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+void Window::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
 }
 
 bool Window::shouldClose() {
