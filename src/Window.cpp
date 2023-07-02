@@ -15,13 +15,23 @@ Window::Window(Camera* cam) {
     }
 
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    int screenWidth = mode->width;
+    int screenHeight = mode->height;
+
+    int windowWidth = screenWidth * 0.6;
+    int windowHeight = screenHeight * 0.6;
+    int windowPosX = (screenWidth - windowWidth) / 2;
+    int windowPosY = (screenHeight - windowHeight) / 2;
 
     // create a windowed mode window and its OpenGL context
-    window = glfwCreateWindow(mode->width, mode->height, "3D Engine", NULL, NULL);
+    window = glfwCreateWindow(windowWidth, windowHeight, "3D Engine", NULL, NULL);
     if (!window) {
         glfwTerminate();
         throw std::runtime_error("Failed to create GLFW window");
     }
+
+    // Set the window position
+    glfwSetWindowPos(window, windowPosX, windowPosY);
 
     // make the window's context current
     glfwMakeContextCurrent(window);
@@ -42,8 +52,10 @@ Window::Window(Camera* cam) {
     camera = cam;
 
     // set the initial viewport size
-    setViewportSize(mode->width, mode->height);
+    setViewportSize(windowWidth, windowHeight);
 }
+
+
 
 Window::~Window() {
     glfwDestroyWindow(window);
