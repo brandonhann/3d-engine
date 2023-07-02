@@ -12,6 +12,10 @@ Application::Application()
     glEnable(GL_DEPTH_TEST);
 }
 
+Application::~Application() {
+    glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
 void Application::run() {
     float lastFrame = 0.0f;
 
@@ -25,6 +29,7 @@ void Application::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         double aspectRatio = ((double)window.getWidth()) / window.getHeight();
+        // 
         glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.zoom), (float)aspectRatio, 0.1f, 100.0f);
         shader.setMat4("projection", projectionMatrix);
 
