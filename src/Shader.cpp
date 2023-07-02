@@ -47,10 +47,35 @@ GLuint Shader::loadShader(const char* vertexShaderPath, const char* fragmentShad
     glCompileShader(vertexShader);
     glCompileShader(fragmentShader);
 
+    // Check vertex shader
+    int success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+    // Check fragment shader
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+
+    // Check shader program
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    }
 
     glDetachShader(shaderProgram, vertexShader);
     glDetachShader(shaderProgram, fragmentShader);
@@ -63,4 +88,9 @@ GLuint Shader::loadShader(const char* vertexShaderPath, const char* fragmentShad
 void Shader::setMat4(const std::string& name, const glm::mat4& mat) const
 {
     glUniformMatrix4fv(glGetUniformLocation(shaderID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setVec4(const std::string& name, const glm::vec4& vec) const
+{
+    glUniform4fv(glGetUniformLocation(shaderID, name.c_str()), 1, glm::value_ptr(vec));
 }

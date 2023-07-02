@@ -4,6 +4,7 @@
 #include "Cube.h"
 #include "Camera.h"
 #include "InputManager.h"
+#include "Grid.h"
 
 class Application {
 public:
@@ -16,6 +17,7 @@ private:
     Cube cube;
     Camera camera;
     InputManager inputManager;
+    Grid grid;
 };
 
 int main() {
