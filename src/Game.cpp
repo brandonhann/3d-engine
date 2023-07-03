@@ -6,15 +6,16 @@ Game::Game()
     : window(&camera),
     shader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl"),
     inputManager(window.getWindow(), &camera),
-    grid(shader, 100.0f, 100.0f, 1.0f),
+    //grid(shader, 100.0f, 100.0f, 1.0f),
+    //cube(shader),
     terrain(shader, 100, 100), // create terrain
-    chunk(terrain, glm::vec2(0, 0)), // create a chunk
-    cube(shader) {
+    chunk(terrain, glm::vec2(0, 0)) { // create a chunk
     shader.use();
     shader.setVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
     shader.setVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)); // white light
     glEnable(GL_DEPTH_TEST);
 }
+
 
 Game::~Game() {
     glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -43,6 +44,8 @@ void Game::run() {
         glm::mat4 modelMatrix = glm::mat4(1.0f);
         shader.setMat4("model", modelMatrix);
 
+        /*
+        * 
         // when drawing the grid, set the color to be super bright
         shader.setVec4("objectColor", glm::vec4(5.0f, 5.0f, 5.0f, 1.0f));  // super bright white color for the grid
         grid.drawGrid();
@@ -55,6 +58,8 @@ void Game::run() {
         glm::mat4 cubeModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         shader.setMat4("model", cubeModelMatrix);
         cube.drawCube();
+
+        */
 
         shader.setVec4("objectColor", glm::vec4(0.0f, 5.0f, 0.0f, 1.0f)); // green color for the chunk
         chunk.drawChunk();

@@ -1,62 +1,75 @@
 #include "Cube.h"
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-// cube vertices
-GLfloat vertices[] = {
-    // Front Face
-    -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-    1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-
-    // Back Face
-    -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-    1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-    1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-    -1.0f, 1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-
-    // Left Face
-    -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-    -1.0f, -1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-    -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-    -1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-
-    // Right Face
-    1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-    1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
-
-    // Top Face
-    -1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-    -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-    1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-    1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-
-    // Bottom Face
-    -1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f,
-    1.0f, -1.0f, -1.0f, 0.0f, -1.0f, 0.0f,
-    1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-    -1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-};
 
 Cube::Cube(Shader& shader) : shader(shader) {
-    this->setupCube();
+    setupMesh();
 }
 
 Cube::~Cube() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
 }
 
 void Cube::drawCube() {
+    shader.use();
+
+    // Bind Textures using texture units
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+
+    // Draw the cube
     glBindVertexArray(VAO);
-    glDrawArrays(GL_QUADS, 0, 24); // 24 verticies
-    glBindVertexArray(0);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
-void Cube::setupCube() {
+void Cube::setupMesh() {
+    float vertices[] = {
+        // Positions          // Texture Coords
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
@@ -64,9 +77,14 @@ void Cube::setupCube() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+
+    // Texture attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
-    glBindVertexArray(0); // unbind VAO
+
+    glBindVertexArray(0); // Unbind VAO
 }

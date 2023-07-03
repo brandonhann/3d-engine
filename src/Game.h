@@ -17,10 +17,10 @@ public:
 private:
     Window window;
     Shader shader;
-    Cube cube;
     Camera camera;
     InputManager inputManager;
-    Grid grid;
+    //Grid grid;
+    //Cube cube;
     Terrain terrain;
     Chunk chunk;
 };
