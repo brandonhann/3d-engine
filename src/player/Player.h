@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <glm/glm.hpp>
-#include "Shader.h"
+#include "../shaders/Shader.h"
 
 class Player {
 public:

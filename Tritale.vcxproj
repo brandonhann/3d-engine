@@ -140,29 +140,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Lighting.cpp" />
-    <ClCompile Include="src\Chunk.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\Cube.cpp" />
+    <ClCompile Include="src\player\Player.cpp" />
+    <ClCompile Include="src\shaders\Lighting.cpp" />
+    <ClCompile Include="src\terrain\Chunk.cpp" />
+    <ClCompile Include="src\player\Camera.cpp" />
+    <ClCompile Include="src\entities\Cube.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\Terrain.cpp" />
-    <ClCompile Include="src\Grid.cpp" />
-    <ClCompile Include="src\InputManager.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\terrain\Terrain.cpp" />
+    <ClCompile Include="src\entities\Grid.cpp" />
+    <ClCompile Include="src\player\InputManager.cpp" />
+    <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Lighting.h" />
-    <ClInclude Include="src\Chunk.h" />
+    <ClInclude Include="src\player\Player.h" />
+    <ClInclude Include="src\shaders\Lighting.h" />
+    <ClInclude Include="src\terrain\Chunk.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\Cube.h" />
-    <ClInclude Include="src\Terrain.h" />
-    <ClInclude Include="src\Grid.h" />
-    <ClInclude Include="src\InputManager.h" />
-    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\player\Camera.h" />
+    <ClInclude Include="src\entities\Cube.h" />
+    <ClInclude Include="src\terrain\Terrain.h" />
+    <ClInclude Include="src\entities\Grid.h" />
+    <ClInclude Include="src\player\InputManager.h" />
+    <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

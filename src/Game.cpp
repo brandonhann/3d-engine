@@ -1,7 +1,7 @@
 #include "Game.h"
-#include "Terrain.h"
-#include "Chunk.h"
-#include "Lighting.h"
+#include "terrain/Terrain.h"
+#include "terrain/Chunk.h"
+#include "shaders/Lighting.h"
 
 Game::Game()
     : window(&camera),

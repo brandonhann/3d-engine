@@ -1,13 +1,11 @@
 #pragma once
 #include "Window.h"
-#include "Shader.h"
-#include "Cube.h"
-#include "Player.h"
-#include "Camera.h"
-#include "InputManager.h"
-#include "Grid.h"
-#include "Terrain.h"
-#include "Chunk.h"
+#include "shaders/Shader.h"
+#include "player/Player.h"
+#include "player/Camera.h"
+#include "player/InputManager.h"
+#include "terrain/Terrain.h"
+#include "terrain/Chunk.h"
 
 class Game {
 public:

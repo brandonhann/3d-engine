@@ -1,7 +1,7 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include "Shader.h"
+#include "../shaders/Shader.h"
 
 class Grid {
 public:

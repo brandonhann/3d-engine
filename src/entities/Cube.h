@@ -1,5 +1,5 @@
 #pragma once
-#include "Shader.h"
+#include "../shaders/Shader.h"
 #include <GL/glew.h>
 
 class Cube {
