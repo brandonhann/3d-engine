@@ -24,7 +24,7 @@ Window::Window(Camera* cam) {
     int windowPosY = (screenHeight - windowHeight) / 2;
 
     // create a windowed mode window and its OpenGL context
-    window = glfwCreateWindow(windowWidth, windowHeight, "3D Engine", NULL, NULL);
+    window = glfwCreateWindow(windowWidth, windowHeight, "Tritale", NULL, NULL);
     if (!window) {
         glfwTerminate();
         throw std::runtime_error("Failed to create GLFW window");

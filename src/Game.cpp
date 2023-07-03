@@ -34,7 +34,7 @@ void Game::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         double aspectRatio = ((double)window.getWidth()) / window.getHeight();
-        // 
+        
         glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.zoom), (float)aspectRatio, 0.1f, 100.0f);
         shader.setMat4("projection", projectionMatrix);
 
