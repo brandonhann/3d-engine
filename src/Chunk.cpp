@@ -8,16 +8,24 @@ Chunk::Chunk(Terrain& terrain, glm::vec2 position) : terrain(terrain), position(
     glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (vertices.size() + normals.size()) * sizeof(float), NULL, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), &vertices[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), normals.size() * sizeof(float), &normals[0]);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
+    // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(vertices.size() * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
+
 }
 
 void Chunk::generateVertices() {
@@ -31,6 +39,18 @@ void Chunk::generateVertices() {
             vertices.push_back((float)x + position.x);
             vertices.push_back(y);
             vertices.push_back((float)z + position.y);
+
+            // Calculate normal here
+            float heightLeft = terrain.getHeight(x - 1 + position.x, z + position.y);
+            float heightRight = terrain.getHeight(x + 1 + position.x, z + position.y);
+            float heightDown = terrain.getHeight(x + position.x, z - 1 + position.y);
+            float heightUp = terrain.getHeight(x + position.x, z + 1 + position.y);
+
+            glm::vec3 normal = glm::normalize(glm::vec3(heightLeft - heightRight, 2.0f, heightDown - heightUp));
+
+            normals.push_back(normal.x);
+            normals.push_back(normal.y);
+            normals.push_back(normal.z);
         }
     }
 
@@ -52,8 +72,12 @@ void Chunk::generateVertices() {
     }
 }
 
-void Chunk::drawChunk() {
+void Chunk::drawChunk(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
     terrain.getShader().use();
+    terrain.getShader().setMat4("model", model);
+    terrain.getShader().setMat4("view", view);
+    terrain.getShader().setMat4("projection", projection);
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

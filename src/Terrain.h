@@ -20,6 +20,7 @@ private:
     int length;
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
+    std::vector<float> normals;
     GLuint VAO, VBO, EBO;
     FastNoiseLite noiseGenerator;
 };

@@ -15,16 +15,24 @@ Terrain::Terrain(Shader& shader, int width, int length)
     glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (vertices.size() + normals.size()) * sizeof(float), NULL, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), &vertices[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), normals.size() * sizeof(float), &normals[0]);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
+    // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(vertices.size() * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
+
 }
 
 void Terrain::generateVertices() {
@@ -35,6 +43,18 @@ void Terrain::generateVertices() {
             vertices.push_back((float)x);
             vertices.push_back(y);
             vertices.push_back((float)z);
+
+            // Calculate normal here
+            float heightLeft = getHeight(x - 1, z);
+            float heightRight = getHeight(x + 1, z);
+            float heightDown = getHeight(x, z - 1);
+            float heightUp = getHeight(x, z + 1);
+
+            glm::vec3 normal = glm::normalize(glm::vec3(heightLeft - heightRight, 2.0f, heightDown - heightUp));
+
+            normals.push_back(normal.x);
+            normals.push_back(normal.y);
+            normals.push_back(normal.z);
         }
     }
 
