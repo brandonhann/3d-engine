@@ -1,18 +1,23 @@
 #include "Terrain.h"
 #include <GL/glew.h>
 
-Terrain::Terrain(Shader& shader, int width, int length) : shader(shader), width(width), length(length) {
+Terrain::Terrain(Shader& shader, int width, int length)
+    : shader(shader), width(width), length(length), noiseGenerator(FastNoiseLite()) {
+
+    noiseGenerator.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    noiseGenerator.SetSeed(42);
+    noiseGenerator.SetFrequency(0.02f);
+
     generateVertices();
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO); // generate EBO for indices
+    glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 
-    // bind and set indices data
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
@@ -61,21 +66,17 @@ void Terrain::drawTerrain() {
 }
 
 float Terrain::getHeight(float x, float z) {
-    // TODO implement this function. for now, return 0.
-    return 0;
+    return 10.0f * noiseGenerator.GetNoise(x, z);
 }
 
 int Terrain::getWidth() {
-    // return the width
     return this->width;
 }
 
 int Terrain::getLength() {
-    // return the length
     return this->length;
 }
 
 Shader& Terrain::getShader() {
-    // return the shader
     return this->shader;
 }

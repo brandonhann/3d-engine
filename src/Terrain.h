@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include <GL/glew.h>
 #include <vector>
+#include "FastNoiseLite.h"
 
 class Terrain {
 public:
@@ -20,4 +21,5 @@ private:
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
     GLuint VAO, VBO, EBO;
+    FastNoiseLite noiseGenerator;
 };
