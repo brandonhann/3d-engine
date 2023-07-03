@@ -6,7 +6,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 Window::Window(Camera* cam) {
     // initialize GLFW
@@ -23,6 +24,14 @@ Window::Window(Camera* cam) {
     int windowPosX = (screenWidth - windowWidth) / 2;
     int windowPosY = (screenHeight - windowHeight) / 2;
 
+    // Load icon image using stb_image
+    int iconWidth, iconHeight, iconChannels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* iconData = stbi_load("./src/assets/icon.png", &iconWidth, &iconHeight, &iconChannels, 0);
+    if (!iconData) {
+        std::cerr << "Failed to load window icon image" << std::endl;
+    }
+
     // create a windowed mode window and its OpenGL context
     window = glfwCreateWindow(windowWidth, windowHeight, "Tritale", NULL, NULL);
     if (!window) {
@@ -32,6 +41,13 @@ Window::Window(Camera* cam) {
 
     // Set the window position
     glfwSetWindowPos(window, windowPosX, windowPosY);
+
+    // Set the window icon
+    GLFWimage icon;
+    icon.width = iconWidth;
+    icon.height = iconHeight;
+    icon.pixels = iconData;
+    glfwSetWindowIcon(window, 1, &icon);
 
     // make the window's context current
     glfwMakeContextCurrent(window);
@@ -54,8 +70,6 @@ Window::Window(Camera* cam) {
     // set the initial viewport size
     setViewportSize(windowWidth, windowHeight);
 }
-
-
 
 Window::~Window() {
     glfwDestroyWindow(window);
