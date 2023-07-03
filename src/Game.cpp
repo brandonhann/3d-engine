@@ -1,10 +1,14 @@
 #include "Game.h"
+#include "Terrain.h"
+#include "Chunk.h"
 
 Game::Game()
     : window(&camera),
     shader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl"),
     inputManager(window.getWindow(), &camera),
     grid(shader, 100.0f, 100.0f, 1.0f),
+    terrain(shader, 100, 100), // create terrain
+    chunk(terrain, glm::vec2(0, 0)), // create a chunk
     cube(shader) {
     shader.use();
     shader.setVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
@@ -51,6 +55,9 @@ void Game::run() {
         glm::mat4 cubeModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         shader.setMat4("model", cubeModelMatrix);
         cube.drawCube();
+
+        shader.setVec4("objectColor", glm::vec4(0.0f, 5.0f, 0.0f, 1.0f)); // green color for the chunk
+        chunk.drawChunk();
 
         window.swapBuffers();
         window.pollEvents();

@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "InputManager.h"
 #include "Grid.h"
+#include "Terrain.h"
+#include "Chunk.h"
 
 class Game {
 public:
@@ -19,6 +21,8 @@ private:
     Camera camera;
     InputManager inputManager;
     Grid grid;
+    Terrain terrain;
+    Chunk chunk;
 };
 
 int main() {

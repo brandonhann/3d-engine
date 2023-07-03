@@ -139,18 +139,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Chunk.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Cube.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Chunk.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Cube.h" />
+    <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\Shader.h" />
