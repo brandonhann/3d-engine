@@ -1,6 +1,6 @@
-#include "Application.h"
+#include "Game.h"
 
-Application::Application()
+Game::Game()
     : window(&camera),
     shader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl"),
     inputManager(window.getWindow(), &camera),
@@ -12,11 +12,11 @@ Application::Application()
     glEnable(GL_DEPTH_TEST);
 }
 
-Application::~Application() {
+Game::~Game() {
     glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
-void Application::run() {
+void Game::run() {
     float lastFrame = 0.0f;
 
     while (!window.shouldClose()) {

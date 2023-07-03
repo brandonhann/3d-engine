@@ -18,8 +18,8 @@ Window::Window(Camera* cam) {
     int screenWidth = mode->width;
     int screenHeight = mode->height;
 
-    int windowWidth = screenWidth * 0.6;
-    int windowHeight = screenHeight * 0.6;
+    int windowWidth = static_cast<int>(screenWidth * 0.6);
+    int windowHeight = static_cast<int>(screenHeight * 0.6);
     int windowPosX = (screenWidth - windowWidth) / 2;
     int windowPosY = (screenHeight - windowHeight) / 2;
 

@@ -6,10 +6,10 @@
 #include "InputManager.h"
 #include "Grid.h"
 
-class Application {
+class Game {
 public:
-    Application();
-    ~Application();
+    Game();
+    ~Game();
     void run();
 
 private:
@@ -22,7 +22,7 @@ private:
 };
 
 int main() {
-    Application app;
-    app.run();
+    Game game;
+    game.run();
     return 0;
 }
