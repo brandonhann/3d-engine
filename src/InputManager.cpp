@@ -8,9 +8,12 @@ bool InputManager::autoRotate = false;
 double InputManager::lastX = 0.0;
 double InputManager::lastY = 0.0;
 
-InputManager::InputManager(GLFWwindow* win, Camera* cam) {
+Player* InputManager::player = nullptr;
+
+InputManager::InputManager(GLFWwindow* win, Camera* cam, Player* plr) {
     window = win;
     camera = cam;
+    player = plr;  // Initialize the Player pointer
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_callback);
@@ -92,6 +95,7 @@ void InputManager::key_callback(GLFWwindow* window, int key, int scancode, int a
             camera->yaw = camera->savedYaw;
             camera->pitch = camera->savedPitch;
             camera->updateCameraVectors(); // update camera vectors after modifying yaw and pitch
+            player->position = camera->position; // update player position when switching from free mode to walking mode
         }
         camera->isWalkingMode = !camera->isWalkingMode;
     }

@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Shader.h"
 #include "Cube.h"
+#include "Player.h"
 #include "Camera.h"
 #include "InputManager.h"
 #include "Grid.h"
@@ -17,10 +18,9 @@ public:
 private:
     Window window;
     Shader shader;
+    Player player;
     Camera camera;
     InputManager inputManager;
-    //Grid grid;
-    //Cube cube;
     Terrain terrain;
     Chunk chunk;
 };

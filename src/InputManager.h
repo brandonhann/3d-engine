@@ -1,12 +1,15 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include <GLFW/glfw3.h>
+#include "Player.h"
 #include "Camera.h"
+#include <GLFW/glfw3.h>
+
+class Player;
 
 class InputManager {
 public:
-    InputManager(GLFWwindow* window, Camera* camera);
+    InputManager(GLFWwindow* window, Camera* camera, Player* player);
 
     void update(float deltaTime);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -16,6 +19,7 @@ public:
 
     static Camera* camera;
     static GLFWwindow* window;
+    static Player* player;
     static bool firstMouse;
     static bool rightButtonPressed;
     static bool autoRotate;
