@@ -6,6 +6,7 @@
 #include "player/InputManager.h"
 #include "terrain/Terrain.h"
 #include "terrain/Chunk.h"
+#include "GameLoop.h"
 
 class Game {
 public:
@@ -21,10 +22,5 @@ private:
     InputManager inputManager;
     Terrain terrain;
     Chunk chunk;
+    GameLoop gameLoop;
 };
-
-int main() {
-    Game game;
-    game.run();
-    return 0;
-}

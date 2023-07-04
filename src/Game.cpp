@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameLoop.h"
 #include "terrain/Terrain.h"
 #include "terrain/Chunk.h"
 #include "shaders/Lighting.h"
@@ -8,7 +9,8 @@ Game::Game()
     shader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl"),
     inputManager(window.getWindow(), &camera, &player),
     terrain(shader, 100, 100), // create terrain
-    chunk(terrain, glm::vec2(0, 0)) { // create a chunk
+    chunk(terrain, glm::vec2(0, 0)), // create a chunk
+    gameLoop(&window, &camera, &player, &inputManager, &shader, &terrain, &chunk) {
     shader.use();
 
     Lighting sunLight(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -16,42 +18,16 @@ Game::Game()
     glEnable(GL_DEPTH_TEST);
 }
 
-
 Game::~Game() {
     glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Game::run() {
-    float lastFrame = 0.0f;
+    gameLoop.run();
+}
 
-    while (!window.shouldClose()) {
-        float currentFrame = static_cast<float>(glfwGetTime());
-        float deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        inputManager.update(deltaTime);
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        double aspectRatio = ((double)window.getWidth()) / window.getHeight();
-        
-        glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera.zoom), (float)aspectRatio, 0.1f, 200.0f);
-        shader.setMat4("projection", projectionMatrix);
-
-        glm::mat4 viewMatrix = camera.getViewMatrix();
-        shader.setMat4("view", viewMatrix);
-
-        glm::mat4 modelMatrix = glm::mat4(1.0f);
-        shader.setMat4("model", modelMatrix);
-
-        if (!camera.isWalkingMode) {
-            player.draw(shader, viewMatrix, projectionMatrix);
-        }
-
-        shader.setVec4("objectColor", glm::vec4(0.0f, 5.0f, 0.0f, 1.0f)); // green color for the chunk
-        chunk.drawChunk(modelMatrix, viewMatrix, projectionMatrix);
-
-        window.swapBuffers();
-        window.pollEvents();
-    }
+int main() {
+    Game game;
+    game.run();
+    return 0;
 }

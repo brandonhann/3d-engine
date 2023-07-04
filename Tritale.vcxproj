@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\player\Player.cpp" />
     <ClCompile Include="src\shaders\Lighting.cpp" />
     <ClCompile Include="src\terrain\Chunk.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameLoop.h" />
     <ClInclude Include="src\player\Player.h" />
     <ClInclude Include="src\shaders\Lighting.h" />
     <ClInclude Include="src\terrain\Chunk.h" />
