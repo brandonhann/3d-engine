@@ -21,14 +21,22 @@ InputManager::InputManager(GLFWwindow* win, Camera* cam, Player* plr) {
 }
 
 void InputManager::update(float deltaTime) {
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         camera->moveForward(deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        if (camera->isWalkingMode) player->position = camera->position;  // Update the Player position
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         camera->moveBackward(deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        if (camera->isWalkingMode) player->position = camera->position;  // Update the Player position
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
         camera->moveLeft(deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        if (camera->isWalkingMode) player->position = camera->position;  // Update the Player position
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         camera->moveRight(deltaTime);
+        if (camera->isWalkingMode) player->position = camera->position;  // Update the Player position
+    }
 
     camera->update(deltaTime);
 
@@ -42,7 +50,6 @@ void InputManager::update(float deltaTime) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
-
 
 void InputManager::mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (!rightButtonPressed && !autoRotate && !camera->isWalkingMode) {

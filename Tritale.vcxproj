@@ -147,6 +147,7 @@
     <ClCompile Include="Dependencies\imgui\include\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Dependencies\imgui\include\imgui_tables.cpp" />
     <ClCompile Include="Dependencies\imgui\include\imgui_widgets.cpp" />
+    <ClCompile Include="src\player\Sensor.h" />
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\player\Player.cpp" />
     <ClCompile Include="src\shaders\Lighting.cpp" />
@@ -192,9 +193,6 @@
     <None Include=".gitignore" />
     <None Include="src\glsl\FragmentShader.glsl" />
     <None Include="src\glsl\VertexShader.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Dependencies\imgui\include\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="src\assets\Tricks.ttf" />

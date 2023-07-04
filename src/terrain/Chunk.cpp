@@ -1,6 +1,7 @@
 #include "Chunk.h"
 
-Chunk::Chunk(Terrain& terrain, glm::vec2 position) : terrain(terrain), position(position) {
+Chunk::Chunk(Terrain& terrain, glm::vec2 position)
+    : terrain(terrain), position(glm::vec3(position.x, 0, position.y)) {
     generateVertices();
 
     glGenVertexArrays(1, &VAO);
@@ -81,4 +82,22 @@ void Chunk::drawChunk(const glm::mat4& model, const glm::mat4& view, const glm::
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+glm::vec3 Chunk::getMin() {
+    return position; // The minimum point is the position itself
+}
+
+glm::vec3 Chunk::getMax() {
+    return position + getBoundingBox(); // The maximum point is position + dimensions
+}
+
+glm::vec3 Chunk::getBoundingBox() {
+    // The function should return the dimensions of the bounding box for the chunk.
+    // For a simple implementation, we're assuming each chunk is a cuboid with a width and length
+    // equal to the Terrain's width and length, and a fixed height. Adjust this if your chunks are different.
+    int width = terrain.getWidth();
+    int length = terrain.getLength();
+    int height = 1; // Replace with your chunk's height
+    return glm::vec3(width, height, length);
 }

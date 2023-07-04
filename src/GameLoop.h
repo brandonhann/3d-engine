@@ -7,6 +7,7 @@
 #include "terrain/Terrain.h"
 #include "terrain/Chunk.h"
 #include "gui/GuiManager.h" 
+#include "player/Sensor.h"
 
 class GameLoop {
 public:
@@ -22,4 +23,5 @@ private:
     Terrain* terrain;
     Chunk* chunk;
     GuiManager* guiManager;
+    Sensor sensor;
 };

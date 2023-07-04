@@ -12,6 +12,8 @@ public:
 
     Player();
     void draw(Shader& shader, glm::mat4& view, glm::mat4& projection);
+    glm::vec3 getMin();
+    glm::vec3 getMax();
 };
 
 #endif

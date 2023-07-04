@@ -72,6 +72,9 @@
     <ClCompile Include="Dependencies\imgui\include\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\player\Sensor.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entities\Cube.h">
@@ -113,16 +116,22 @@
     <ClInclude Include="src\gui\GuiManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dependencies\imgui\include\imconfig.h">
+    <ClInclude Include="Dependencies\imgui\include\imgui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dependencies\imgui\include\imgui.h">
+    <ClInclude Include="Dependencies\imgui\include\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\imgui\include\imconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\imgui\include\imgui_impl_glfw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\imgui\include\imgui_impl_opengl3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\imgui\include\imgui_impl_opengl3_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\imgui\include\imgui_internal.h">
@@ -132,12 +141,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\imgui\include\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Dependencies\imgui\include\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Dependencies\imgui\include\imgui_impl_opengl3_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -151,9 +154,6 @@
     <None Include=".gitignore" />
     <None Include="src\glsl\VertexShader.glsl" />
     <None Include="src\glsl\FragmentShader.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Dependencies\imgui\include\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="src\assets\Tricks.ttf" />

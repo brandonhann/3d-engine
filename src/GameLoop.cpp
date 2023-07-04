@@ -4,7 +4,7 @@
 #include <chrono>
 
 GameLoop::GameLoop(Window* window, Camera* camera, Player* player, InputManager* inputManager, Shader* shader, Terrain* terrain, Chunk* chunk, GuiManager* guiManager)
-    : window(window), camera(camera), player(player), inputManager(inputManager), shader(shader), terrain(terrain), chunk(chunk), guiManager(guiManager) {
+    : window(window), camera(camera), player(player), inputManager(inputManager), shader(shader), terrain(terrain), chunk(chunk), guiManager(guiManager), sensor(*player, *chunk) {
 }
 
 void GameLoop::run() {
@@ -59,6 +59,8 @@ void GameLoop::run() {
 
         shader->setVec4("objectColor", glm::vec4(0.0f, 5.0f, 0.0f, 1.0f)); // green color for the chunk
         chunk->drawChunk(modelMatrix, viewMatrix, projectionMatrix);
+
+        sensor.update();
 
         frames++; // Increment the frame counter
     }
