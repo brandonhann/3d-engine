@@ -30,15 +30,15 @@ Chunk::Chunk(Terrain& terrain, glm::vec2 position)
 }
 
 void Chunk::generateVertices() {
-    int width = terrain.getWidth();
-    int length = terrain.getLength();
+    int chunkSize = 16; // Size of chunk
+    float scale = 3.5f; // This can be adjusted to your liking
 
-    for (int z = 0; z < length - 1; z++) {
-        for (int x = 0; x < width - 1; x++) {
-            glm::vec3 v1((float)x + position.x, terrain.getHeight(x + position.x, z + position.y), (float)z + position.y);
-            glm::vec3 v2((float)x + position.x, terrain.getHeight(x + position.x, (z + 1) + position.y), (float)(z + 1) + position.y);
-            glm::vec3 v3((float)(x + 1) + position.x, terrain.getHeight((x + 1) + position.x, z + position.y), (float)z + position.y);
-            glm::vec3 v4((float)(x + 1) + position.x, terrain.getHeight((x + 1) + position.x, (z + 1) + position.y), (float)(z + 1) + position.y);
+    for (int z = 0; z < chunkSize - 1; z++) {
+        for (int x = 0; x < chunkSize - 1; x++) {
+            glm::vec3 v1((float)x * scale + position.x, terrain.getHeight(x + position.x, z + position.y), (float)z * scale + position.y);
+            glm::vec3 v2((float)x * scale + position.x, terrain.getHeight(x + position.x, (z + 1) + position.y), (float)(z + 1) * scale + position.y);
+            glm::vec3 v3((float)(x + 1) * scale + position.x, terrain.getHeight((x + 1) + position.x, z + position.y), (float)z * scale + position.y);
+            glm::vec3 v4((float)(x + 1) * scale + position.x, terrain.getHeight((x + 1) + position.x, (z + 1) + position.y), (float)(z + 1) * scale + position.y);
 
             // Calculate normal for first triangle (v1, v2, v3)
             glm::vec3 normal1 = glm::normalize(glm::cross(v2 - v1, v3 - v1));
@@ -66,11 +66,12 @@ void Chunk::generateVertices() {
             }
 
             // indices - each triangle has its own set of vertices now
-            unsigned int vertexIndex = static_cast<unsigned int>((z * (width - 1) + x) * 6);  // 6 vertices per quad (2 triangles)
+            unsigned int vertexIndex = static_cast<unsigned int>((z * (chunkSize - 1) + x) * 6);  // 6 vertices per quad (2 triangles)
             indices.insert(indices.end(), { vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex + 3, vertexIndex + 4, vertexIndex + 5 });
         }
     }
 }
+
 
 
 void Chunk::drawChunk(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
