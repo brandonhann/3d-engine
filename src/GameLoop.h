@@ -6,10 +6,11 @@
 #include "player/InputManager.h"
 #include "terrain/Terrain.h"
 #include "terrain/Chunk.h"
+#include "gui/GuiManager.h" 
 
 class GameLoop {
 public:
-    GameLoop(Window* window, Camera* camera, Player* player, InputManager* inputManager, Shader* shader, Terrain* terrain, Chunk* chunk);
+    GameLoop(Window* window, Camera* camera, Player* player, InputManager* inputManager, Shader* shader, Terrain* terrain, Chunk* chunk, GuiManager* guiManager);
     void run();
 
 private:
@@ -20,4 +21,5 @@ private:
     InputManager* inputManager;
     Terrain* terrain;
     Chunk* chunk;
+    GuiManager* guiManager;
 };

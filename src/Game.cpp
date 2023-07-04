@@ -10,7 +10,8 @@ Game::Game()
     inputManager(window.getWindow(), &camera, &player),
     terrain(shader, 100, 100), // create terrain
     chunk(terrain, glm::vec2(0, 0)), // create a chunk
-    gameLoop(&window, &camera, &player, &inputManager, &shader, &terrain, &chunk) {
+    guiManager(window.getWindow()),  // initialize GuiManager
+    gameLoop(&window, &camera, &player, &inputManager, &shader, &terrain, &chunk, &guiManager) {
     shader.use();
 
     Lighting sunLight(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));

@@ -23,4 +23,5 @@ private:
     Terrain terrain;
     Chunk chunk;
     GameLoop gameLoop;
+    GuiManager guiManager; 
 };

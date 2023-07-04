@@ -3,8 +3,8 @@
 #include <thread>
 #include <chrono>
 
-GameLoop::GameLoop(Window* window, Camera* camera, Player* player, InputManager* inputManager, Shader* shader, Terrain* terrain, Chunk* chunk)
-    : window(window), camera(camera), player(player), inputManager(inputManager), shader(shader), terrain(terrain), chunk(chunk) {
+GameLoop::GameLoop(Window* window, Camera* camera, Player* player, InputManager* inputManager, Shader* shader, Terrain* terrain, Chunk* chunk, GuiManager* guiManager)
+    : window(window), camera(camera), player(player), inputManager(inputManager), shader(shader), terrain(terrain), chunk(chunk), guiManager(guiManager) {
 }
 
 void GameLoop::run() {
@@ -28,8 +28,12 @@ void GameLoop::run() {
 
         lastFrame = currentFrame;
 
+        guiManager->renderFPS(); // ImGui rendering
+
+        window->swapBuffers();
+        window->pollEvents();
+
         if (currentFrame - lastSecond >= 1.0f) { // If at least one second has passed
-            std::cout << "FPS: " << frames << std::endl; // Log the number of frames
             frames = 0; // Reset the frame counter
             lastSecond = currentFrame; // Reset the last second tracker
         }
@@ -55,9 +59,6 @@ void GameLoop::run() {
 
         shader->setVec4("objectColor", glm::vec4(0.0f, 5.0f, 0.0f, 1.0f)); // green color for the chunk
         chunk->drawChunk(modelMatrix, viewMatrix, projectionMatrix);
-
-        window->swapBuffers();
-        window->pollEvents();
 
         frames++; // Increment the frame counter
     }
