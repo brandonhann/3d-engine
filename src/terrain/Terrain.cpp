@@ -44,17 +44,20 @@ void Terrain::generateVertices() {
             vertices.push_back(y);
             vertices.push_back((float)z);
 
-            // Calculate normal here
-            float heightLeft = getHeight(x - 1, z);
-            float heightRight = getHeight(x + 1, z);
-            float heightDown = getHeight(x, z - 1);
-            float heightUp = getHeight(x, z + 1);
+            // Calculate normal for quad (top left, bottom left, top right, bottom right)
+            glm::vec3 topLeft = glm::vec3(x, getHeight(x, z), z);
+            glm::vec3 bottomLeft = glm::vec3(x, getHeight(x, z + 1), z + 1);
+            glm::vec3 topRight = glm::vec3(x + 1, getHeight(x + 1, z), z);
+            glm::vec3 bottomRight = glm::vec3(x + 1, getHeight(x + 1, z + 1), z + 1);
 
-            glm::vec3 normal = glm::normalize(glm::vec3(heightLeft - heightRight, 2.0f, heightDown - heightUp));
+            glm::vec3 normal = glm::normalize(glm::cross(bottomLeft - topLeft, topRight - topLeft) + glm::cross(topRight - bottomLeft, bottomRight - bottomLeft));
 
-            normals.push_back(normal.x);
-            normals.push_back(normal.y);
-            normals.push_back(normal.z);
+            // Use the same normal for all vertices in the quad
+            for (int i = 0; i < 4; i++) {
+                normals.push_back(normal.x);
+                normals.push_back(normal.y);
+                normals.push_back(normal.z);
+            }
         }
     }
 
@@ -86,8 +89,18 @@ void Terrain::drawTerrain() {
 }
 
 float Terrain::getHeight(float x, float z) {
-    return 10.0f * noiseGenerator.GetNoise(x, z);
+    float rawHeight = noiseGenerator.GetNoise(x, z);
+
+    // Adjust the multiplier to change the amplitude of the terrain
+    rawHeight *= 10.0f;
+
+    // Use a step function to make the terrain less smooth and more angular
+    float stepSize = 1.0f; // Adjust this to change the size of the "steps"
+    float steppedHeight = std::round(rawHeight / stepSize) * stepSize;
+
+    return steppedHeight;
 }
+
 
 int Terrain::getWidth() {
     return this->width;

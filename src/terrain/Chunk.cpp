@@ -33,45 +33,45 @@ void Chunk::generateVertices() {
     int width = terrain.getWidth();
     int length = terrain.getLength();
 
-    for (int z = 0; z < length; z++) {
-        for (int x = 0; x < width; x++) {
-            float y = terrain.getHeight(x + position.x, z + position.y);
-
-            vertices.push_back((float)x + position.x);
-            vertices.push_back(y);
-            vertices.push_back((float)z + position.y);
-
-            // Calculate normal here
-            float heightLeft = terrain.getHeight(x - 1 + position.x, z + position.y);
-            float heightRight = terrain.getHeight(x + 1 + position.x, z + position.y);
-            float heightDown = terrain.getHeight(x + position.x, z - 1 + position.y);
-            float heightUp = terrain.getHeight(x + position.x, z + 1 + position.y);
-
-            glm::vec3 normal = glm::normalize(glm::vec3(heightLeft - heightRight, 2.0f, heightDown - heightUp));
-
-            normals.push_back(normal.x);
-            normals.push_back(normal.y);
-            normals.push_back(normal.z);
-        }
-    }
-
     for (int z = 0; z < length - 1; z++) {
         for (int x = 0; x < width - 1; x++) {
-            int topLeft = z * width + x;
-            int topRight = topLeft + 1;
-            int bottomLeft = (z + 1) * width + x;
-            int bottomRight = bottomLeft + 1;
+            glm::vec3 v1((float)x + position.x, terrain.getHeight(x + position.x, z + position.y), (float)z + position.y);
+            glm::vec3 v2((float)x + position.x, terrain.getHeight(x + position.x, (z + 1) + position.y), (float)(z + 1) + position.y);
+            glm::vec3 v3((float)(x + 1) + position.x, terrain.getHeight((x + 1) + position.x, z + position.y), (float)z + position.y);
+            glm::vec3 v4((float)(x + 1) + position.x, terrain.getHeight((x + 1) + position.x, (z + 1) + position.y), (float)(z + 1) + position.y);
 
-            indices.push_back(topLeft);
-            indices.push_back(bottomLeft);
-            indices.push_back(topRight);
+            // Calculate normal for first triangle (v1, v2, v3)
+            glm::vec3 normal1 = glm::normalize(glm::cross(v2 - v1, v3 - v1));
+            // Calculate normal for second triangle (v2, v3, v4)
+            glm::vec3 normal2 = glm::normalize(glm::cross(v3 - v2, v4 - v2));
 
-            indices.push_back(topRight);
-            indices.push_back(bottomLeft);
-            indices.push_back(bottomRight);
+            // first triangle vertices
+            vertices.insert(vertices.end(), { v1.x, v1.y, v1.z });
+            vertices.insert(vertices.end(), { v2.x, v2.y, v2.z });
+            vertices.insert(vertices.end(), { v3.x, v3.y, v3.z });
+
+            // first triangle normals
+            for (int i = 0; i < 3; i++) {
+                normals.insert(normals.end(), { normal1.x, normal1.y, normal1.z });
+            }
+
+            // second triangle vertices
+            vertices.insert(vertices.end(), { v2.x, v2.y, v2.z });
+            vertices.insert(vertices.end(), { v3.x, v3.y, v3.z });
+            vertices.insert(vertices.end(), { v4.x, v4.y, v4.z });
+
+            // second triangle normals
+            for (int i = 0; i < 3; i++) {
+                normals.insert(normals.end(), { normal2.x, normal2.y, normal2.z });
+            }
+
+            // indices - each triangle has its own set of vertices now
+            unsigned int vertexIndex = static_cast<unsigned int>((z * (width - 1) + x) * 6);  // 6 vertices per quad (2 triangles)
+            indices.insert(indices.end(), { vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex + 3, vertexIndex + 4, vertexIndex + 5 });
         }
     }
 }
+
 
 void Chunk::drawChunk(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
     terrain.getShader().use();
