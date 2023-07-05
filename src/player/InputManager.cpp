@@ -2,25 +2,33 @@
 
 Camera* InputManager::camera = nullptr;
 GLFWwindow* InputManager::window = nullptr;
-bool InputManager::firstMouse = true;
+Player* InputManager::player = nullptr;
+Chunk* InputManager::chunk = nullptr;
+Sensor* InputManager::sensor = nullptr;
+
+bool InputManager::firstMouse = false;
 bool InputManager::rightButtonPressed = false;
 bool InputManager::autoRotate = false;
-double InputManager::lastX = 0.0;
-double InputManager::lastY = 0.0;
+double InputManager::lastX = 0;
+double InputManager::lastY = 0;
 
-Player* InputManager::player = nullptr;
-
-InputManager::InputManager(GLFWwindow* win, Camera* cam, Player* plr) {
+InputManager::InputManager(GLFWwindow* win, Camera* cam, Player* plr, Chunk* chk) {
     window = win;
     camera = cam;
-    player = plr;  // Initialize the Player pointer
+    player = plr;
+    chunk = chk; // You forgot this initialization
+    sensor = new Sensor(*player, *chk); // Initialize the Sensor pointer
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, key_callback);
     glfwSetScrollCallback(window, scroll_callback);
 }
 
+
 void InputManager::update(float deltaTime) {
+    // Save the current position
+    glm::vec3 oldPosition = camera->position;
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         camera->moveForward(deltaTime);
         if (camera->isWalkingMode) player->position = camera->position;  // Update the Player position
@@ -38,6 +46,12 @@ void InputManager::update(float deltaTime) {
         if (camera->isWalkingMode) player->position = camera->position;  // Update the Player position
     }
 
+    // Adjust the player's y position based on the terrain's height at their position
+    if (camera->isWalkingMode) {
+        player->position.y = chunk->getHeight(player->position.x, player->position.z) + player->scale.y * 0.5f;
+        camera->position.y = player->position.y + player->scale.y * 0.5f;  // Adjust the camera's height too
+    }
+
     camera->update(deltaTime);
 
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && camera->isWalkingMode && !camera->isJumping)
@@ -50,6 +64,7 @@ void InputManager::update(float deltaTime) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
+
 
 void InputManager::mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (!rightButtonPressed && !autoRotate && !camera->isWalkingMode) {

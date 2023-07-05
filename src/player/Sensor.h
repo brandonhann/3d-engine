@@ -16,10 +16,6 @@ public:
         }
     }
 
-private:
-    Player& player;
-    Chunk& chunk;
-
     bool checkCollision() {
         // Get the min and max points for each bounding box
         glm::vec3 playerMin = player.getMin();
@@ -37,6 +33,9 @@ private:
         return true;
     }
 
+private:
+    Player& player;
+    Chunk& chunk;
 };
 
 #endif

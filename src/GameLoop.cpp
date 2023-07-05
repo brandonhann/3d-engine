@@ -3,8 +3,8 @@
 #include <thread>
 #include <chrono>
 
-GameLoop::GameLoop(Window* window, Camera* camera, Player* player, InputManager* inputManager, Shader* shader, Terrain* terrain, Chunk* chunk, GuiManager* guiManager)
-    : window(window), camera(camera), player(player), inputManager(inputManager), shader(shader), terrain(terrain), chunk(chunk), guiManager(guiManager), sensor(*player, *chunk) {
+GameLoop::GameLoop(Window* window, Camera* camera, Player* player, InputManager* inputManager, Shader* shader, Chunk* chunk, GuiManager* guiManager)
+    : window(window), camera(camera), player(player), inputManager(inputManager), shader(shader), chunk(chunk), guiManager(guiManager), sensor(*player, *chunk), physics(*player, *chunk) {
 }
 
 void GameLoop::run() {
@@ -27,6 +27,8 @@ void GameLoop::run() {
         }
 
         lastFrame = currentFrame;
+
+        physics.update(deltaTime);
 
         guiManager->renderFPS(); // ImGui rendering
 

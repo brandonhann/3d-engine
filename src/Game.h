@@ -4,7 +4,6 @@
 #include "player/Player.h"
 #include "player/Camera.h"
 #include "player/InputManager.h"
-#include "terrain/Terrain.h"
 #include "terrain/Chunk.h"
 #include "GameLoop.h"
 
@@ -20,7 +19,6 @@ private:
     Player player;
     Camera camera;
     InputManager inputManager;
-    Terrain terrain;
     Chunk chunk;
     GameLoop gameLoop;
     GuiManager guiManager; 

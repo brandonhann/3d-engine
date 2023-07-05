@@ -3,13 +3,14 @@
 
 #include "Player.h"
 #include "Camera.h"
+#include "Sensor.h" 
 #include <GLFW/glfw3.h>
 
 class Player;
 
 class InputManager {
 public:
-    InputManager(GLFWwindow* window, Camera* camera, Player* player);
+    InputManager(GLFWwindow* window, Camera* camera, Player* player, Chunk* chunk);
 
     void update(float deltaTime);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -20,6 +21,8 @@ public:
     static Camera* camera;
     static GLFWwindow* window;
     static Player* player;
+    static Chunk* chunk;
+    static Sensor* sensor; 
     static bool firstMouse;
     static bool rightButtonPressed;
     static bool autoRotate;

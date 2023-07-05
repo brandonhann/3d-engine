@@ -1,7 +1,11 @@
 #include "Chunk.h"
 
-Chunk::Chunk(Terrain& terrain, glm::vec2 position)
-    : terrain(terrain), position(glm::vec3(position.x, 0, position.y)) {
+Chunk::Chunk(Shader& shader, int width, int length, glm::vec2 position)
+    : shader(shader), width(width), length(length), noiseGenerator(FastNoiseLite()), position(glm::vec3(position.x, 0, position.y)) {
+    noiseGenerator.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    noiseGenerator.SetSeed(42);
+    noiseGenerator.SetFrequency(0.02f);
+
     generateVertices();
 
     glGenVertexArrays(1, &VAO);
@@ -26,7 +30,6 @@ Chunk::Chunk(Terrain& terrain, glm::vec2 position)
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
-
 }
 
 void Chunk::generateVertices() {
@@ -35,10 +38,10 @@ void Chunk::generateVertices() {
 
     for (int z = 0; z < chunkSize - 1; z++) {
         for (int x = 0; x < chunkSize - 1; x++) {
-            glm::vec3 v1((float)x * scale + position.x, terrain.getHeight(x + position.x, z + position.y), (float)z * scale + position.y);
-            glm::vec3 v2((float)x * scale + position.x, terrain.getHeight(x + position.x, (z + 1) + position.y), (float)(z + 1) * scale + position.y);
-            glm::vec3 v3((float)(x + 1) * scale + position.x, terrain.getHeight((x + 1) + position.x, z + position.y), (float)z * scale + position.y);
-            glm::vec3 v4((float)(x + 1) * scale + position.x, terrain.getHeight((x + 1) + position.x, (z + 1) + position.y), (float)(z + 1) * scale + position.y);
+            glm::vec3 v1((float)x * scale + position.x, getHeight(x * scale + position.x, z * scale + position.z), (float)z * scale + position.z);
+            glm::vec3 v2((float)x * scale + position.x, getHeight(x * scale + position.x, (z + 1) * scale + position.z), (float)(z + 1) * scale + position.z);
+            glm::vec3 v3((float)(x + 1) * scale + position.x, getHeight((x + 1) * scale + position.x, z * scale + position.z), (float)z * scale + position.z);
+            glm::vec3 v4((float)(x + 1) * scale + position.x, getHeight((x + 1) * scale + position.x, (z + 1) * scale + position.z), (float)(z + 1) * scale + position.z);
 
             // Calculate normal for first triangle (v1, v2, v3)
             glm::vec3 normal1 = glm::normalize(glm::cross(v2 - v1, v3 - v1));
@@ -75,10 +78,10 @@ void Chunk::generateVertices() {
 
 
 void Chunk::drawChunk(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
-    terrain.getShader().use();
-    terrain.getShader().setMat4("model", model);
-    terrain.getShader().setMat4("view", view);
-    terrain.getShader().setMat4("projection", projection);
+    shader.use();
+    shader.setMat4("model", model);
+    shader.setMat4("view", view);
+    shader.setMat4("projection", projection);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -94,11 +97,54 @@ glm::vec3 Chunk::getMax() {
 }
 
 glm::vec3 Chunk::getBoundingBox() {
-    // The function should return the dimensions of the bounding box for the chunk.
-    // For a simple implementation, we're assuming each chunk is a cuboid with a width and length
-    // equal to the Terrain's width and length, and a fixed height. Adjust this if your chunks are different.
-    int width = terrain.getWidth();
-    int length = terrain.getLength();
     int height = 1; // Replace with your chunk's height
     return glm::vec3(width, height, length);
+}
+
+float Chunk::getHeight(float x, float z) {
+    int xInt = (int)x;
+    int zInt = (int)z;
+
+    float fracX = x - xInt;
+    float fracZ = z - zInt;
+
+    float h00 = getRawHeight(xInt, zInt);
+    float h10 = getRawHeight(xInt + 1, zInt);
+    float h01 = getRawHeight(xInt, zInt + 1);
+    float h11 = getRawHeight(xInt + 1, zInt + 1);
+
+    float heightX1 = interpolate(h00, h10, fracX);
+    float heightX2 = interpolate(h01, h11, fracX);
+    float height = interpolate(heightX1, heightX2, fracZ);
+
+    return height;
+}
+
+float Chunk::getRawHeight(float x, float z) {
+    float rawHeight = noiseGenerator.GetNoise(x, z);
+
+    // Adjust the multiplier to change the amplitude of the terrain
+    rawHeight *= 10.0f;
+
+    // Use a step function to make the terrain less smooth and more angular
+    float stepSize = 1.0f; // Adjust this to change the size of the "steps"
+    float steppedHeight = std::round(rawHeight / stepSize) * stepSize;
+
+    return steppedHeight;
+}
+
+float Chunk::interpolate(float a, float b, float fraction) {
+    return a + fraction * (b - a);
+}
+
+int Chunk::getWidth() {
+    return this->width;
+}
+
+int Chunk::getLength() {
+    return this->length;
+}
+
+Shader& Chunk::getShader() {
+    return this->shader;
 }
