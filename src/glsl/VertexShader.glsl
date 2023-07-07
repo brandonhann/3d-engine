@@ -1,14 +1,14 @@
 #version 330 core
 
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 normal;  // New normal attribute
+layout (location = 1) in vec3 normal; 
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 Normal;  // New Normal variable
-out vec3 FragPos;  // New Fragment Position variable
+out vec3 Normal;
+out vec3 FragPos;
 
 void main()
 {

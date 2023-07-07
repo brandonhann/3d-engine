@@ -8,6 +8,7 @@
 #include "gui/GuiManager.h" 
 #include "player/Sensor.h"
 #include "Physics.h"
+#include "shaders/Lighting.h" 
 
 class GameLoop {
 public:

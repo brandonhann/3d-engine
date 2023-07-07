@@ -59,7 +59,13 @@ void GameLoop::run() {
             player->draw(*shader, viewMatrix, projectionMatrix);
         }
 
-        shader->setVec4("objectColor", glm::vec4(0.0f, 5.0f, 0.0f, 1.0f)); // green color for the chunk
+        glm::vec3 lightPos = glm::vec3(0.0f, 10.0f, 0.0f);
+        glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); // brighter white light
+
+        Lighting lighting(lightPos, lightColor);
+
+        shader->setVec4("objectColor", glm::vec4(0.5f, 1.25f, 0.25f, 1.0f)); // darker green color for the chunk
+        lighting.setLight(*shader);
         chunk->drawChunk(modelMatrix, viewMatrix, projectionMatrix);
 
         sensor.update();

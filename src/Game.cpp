@@ -7,7 +7,7 @@ Game::Game()
     : window(&camera),
     shader("./src/glsl/VertexShader.glsl", "./src/glsl/FragmentShader.glsl"),
     inputManager(window.getWindow(), &camera, &player, &chunk),
-    chunk(shader, 100, 100, glm::vec2(0, 0)), // create a chunk
+    chunk(shader, 100.0f, 100.0f, glm::vec2(0, 0)), // create a chunk
     guiManager(window.getWindow()),  // initialize GuiManager
     gameLoop(&window, &camera, &player, &inputManager, &shader, &chunk, &guiManager) {
     shader.use();

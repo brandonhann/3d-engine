@@ -1,17 +1,17 @@
 #version 330 core
+in vec3 Normal;  
+in vec3 FragPos;  
 
-out vec4 FragColor;
-in vec3 Normal;  // Normal of the vertex
-in vec3 FragPos;  // Position of the fragment
+out vec4 color;
 
-uniform vec3 lightPos;  // Position of the light source
-uniform vec4 lightColor;  // Color of the light source
-uniform vec4 objectColor;  // Color of the object
+uniform vec3 lightPos; 
+uniform vec4 lightColor;
+uniform vec4 objectColor;
 
 void main()
 {
     // Ambient
-    float ambientStrength = 0.1f;
+    float ambientStrength = 0.1; // You can adjust this value to get your desired effect
     vec4 ambient = ambientStrength * lightColor;
 
     // Diffuse
@@ -21,5 +21,5 @@ void main()
     vec4 diffuse = diff * lightColor;
 
     vec4 result = (ambient + diffuse) * objectColor;
-    FragColor = result;
+    color = vec4(result.xyz, 1.0); // Assuming alpha value of 1.0
 }
