@@ -1,7 +1,8 @@
 #include "Chunk.h"
 
 Chunk::Chunk(Shader& shader, float width, float length, glm::vec2 position)
-    : shader(shader), width(width), length(length), noiseGenerator(FastNoiseLite()), position(glm::vec3(static_cast<float>(position.x), 0.0f, static_cast<float>(position.y))) {
+    : shader(shader), width(width), length(length), scale(phi),
+    position(glm::vec3(static_cast<float>(position.x), 0.0f, static_cast<float>(position.y))) {
     noiseGenerator.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
     noiseGenerator.SetSeed(phi);
     noiseGenerator.SetFrequency(0.02f);
@@ -33,40 +34,43 @@ Chunk::Chunk(Shader& shader, float width, float length, glm::vec2 position)
 
 
 void Chunk::generateVertices() {
-    int chunkSize = 32;
-    int scale = static_cast<int>(phi);
+    const int chunkSize = 32;
+    const int scale = static_cast<int>(phi);
 
-    for (int z = 0; z < chunkSize - 1; z++) {
-        for (int x = 0; x < chunkSize - 1; x++) {
-            glm::vec3 v1(static_cast<float>(x * scale + position.x), getHeight(static_cast<float>(x * scale + position.x), static_cast<float>(z * scale + position.z)), static_cast<float>(z * scale + position.z));
-            glm::vec3 v2(static_cast<float>(x * scale + position.x), getHeight(static_cast<float>(x * scale + position.x), static_cast<float>((z + 1) * scale + position.z)), static_cast<float>((z + 1) * scale + position.z));
-            glm::vec3 v3(static_cast<float>((x + 1) * scale + position.x), getHeight(static_cast<float>((x + 1) * scale + position.x), static_cast<float>(z * scale + position.z)), static_cast<float>(z * scale + position.z));
-            glm::vec3 v4(static_cast<float>((x + 1) * scale + position.x), getHeight(static_cast<float>((x + 1) * scale + position.x), static_cast<float>((z + 1) * scale + position.z)), static_cast<float>((z + 1) * scale + position.z));
+    const int indicesPerQuad = 6;
+
+    for (int z = 0; z < chunkSize - 1; ++z) {
+        for (int x = 0; x < chunkSize - 1; ++x) {
+            glm::vec3 v1(x * scale + position.x, getHeight(x * scale + position.x, z * scale + position.z), z * scale + position.z);
+            glm::vec3 v2(x * scale + position.x, getHeight(x * scale + position.x, (z + 1) * scale + position.z), (z + 1) * scale + position.z);
+            glm::vec3 v3((x + 1) * scale + position.x, getHeight((x + 1) * scale + position.x, z * scale + position.z), z * scale + position.z);
+            glm::vec3 v4((x + 1) * scale + position.x, getHeight((x + 1) * scale + position.x, (z + 1) * scale + position.z), (z + 1) * scale + position.z);
 
             glm::vec3 normal1 = glm::normalize(glm::cross(v2 - v1, v3 - v1));
             glm::vec3 normal2 = glm::normalize(glm::cross(v3 - v2, v4 - v2));
 
-            vertices.insert(vertices.end(), { v1.x, v1.y, v1.z });
-            vertices.insert(vertices.end(), { v2.x, v2.y, v2.z });
-            vertices.insert(vertices.end(), { v3.x, v3.y, v3.z });
+            std::vector<glm::vec3> currentVertices = { v1, v2, v3, v2, v3, v4 };
+            std::vector<glm::vec3> currentNormals = { normal1, normal1, normal1, normal2, normal2, normal2 };
 
-            for (int i = 0; i < 3; i++) {
-                normals.insert(normals.end(), { normal1.x, normal1.y, normal1.z });
+            for (const auto& vertex : currentVertices) {
+                vertices.push_back(vertex.x);
+                vertices.push_back(vertex.y);
+                vertices.push_back(vertex.z);
             }
 
-            vertices.insert(vertices.end(), { v2.x, v2.y, v2.z });
-            vertices.insert(vertices.end(), { v3.x, v3.y, v3.z });
-            vertices.insert(vertices.end(), { v4.x, v4.y, v4.z });
-
-            for (int i = 0; i < 3; i++) {
-                normals.insert(normals.end(), { normal2.x, normal2.y, normal2.z });
+            for (const auto& normal : currentNormals) {
+                normals.push_back(normal.x);
+                normals.push_back(normal.y);
+                normals.push_back(normal.z);
             }
 
-            unsigned int vertexIndex = static_cast<unsigned int>((z * (chunkSize - 1) + x) * 6);
-            indices.insert(indices.end(), { vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex + 3, vertexIndex + 4, vertexIndex + 5 });
+            unsigned int vertexIndex = static_cast<unsigned int>((z * (chunkSize - 1) + x) * indicesPerQuad);
+            std::vector<unsigned int> currentIndices = { vertexIndex, vertexIndex + 1, vertexIndex + 2, vertexIndex + 3, vertexIndex + 4, vertexIndex + 5 };
+            indices.insert(indices.end(), currentIndices.begin(), currentIndices.end());
         }
     }
 }
+
 
 void Chunk::drawChunk(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection) {
     shader.use();
@@ -89,8 +93,9 @@ glm::vec3 Chunk::getMax() {
 
 glm::vec3 Chunk::getBoundingBox() {
     int height = static_cast<int>(phi); // Chunks height
-    return glm::vec3(width, height, length);
+    return glm::vec3(width * scale, height * scale, length * scale);
 }
+
 
 float Chunk::getHeight(float x, float z) {
     float rawHeight = noiseGenerator.GetNoise(x, z);

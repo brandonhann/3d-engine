@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "Player.h"
 #include <glm/glm.hpp>
 
 class Camera {
@@ -37,8 +38,9 @@ public:
     // Constants for jumping
     const float gravity = -9.8f;
     const float jumpSpeed = 5.0f;
-
+    Player& player;
     Camera();
+    Camera(Player& player);
     void moveForward(float deltaTime);
     void moveBackward(float deltaTime);
     void moveLeft(float deltaTime);

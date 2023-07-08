@@ -23,7 +23,7 @@ public:
         glm::vec3 chunkMin = chunk.getMin();
         glm::vec3 chunkMax = chunk.getMax();
 
-        // Check for intersection
+        // Check for intersection on all three axes
         if (playerMax.x < chunkMin.x || playerMin.x > chunkMax.x ||
             playerMax.y < chunkMin.y || playerMin.y > chunkMax.y ||
             playerMax.z < chunkMin.z || playerMin.z > chunkMax.z) {

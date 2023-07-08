@@ -27,6 +27,7 @@ private:
     Shader& shader;
     float width = 100.0f;
     float length = 100.0f;
+    float scale;
     glm::vec3 position;
     std::vector<float> vertices;
     std::vector<unsigned int> indices;

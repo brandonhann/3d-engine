@@ -5,7 +5,8 @@
 const float gravity = -9.8f;
 const float jumpSpeed = 5.0f;
 
-Camera::Camera() {
+Camera::Camera(Player& player)
+    : player(player) {
     position = glm::vec3(0.0f, playerHeight, 3.0f);
     worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     front = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -148,12 +149,12 @@ void Camera::setWalkingMode(bool isWalking) {
 
 void Camera::update(float deltaTime) {
     if (isWalkingMode && isJumping) {
-        position.y += velocityY * deltaTime; // apply the velocity to the Y position
+        player.position.y += velocityY * deltaTime; // apply the velocity to the Y position
         velocityY += gravity * deltaTime; // apply gravity to the velocity
 
         // if we've hit the ground, stop falling
-        if (position.y <= playerHeight) {
-            position.y = playerHeight;
+        if (player.position.y <= player.position.y) {
+            player.position.y = player.position.y;
             velocityY = 0;
             isJumping = false;
         }

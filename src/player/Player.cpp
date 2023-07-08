@@ -32,6 +32,7 @@ void Player::draw(Shader& shader, glm::mat4& view, glm::mat4& projection) {
         5, 4, 1  // right face
     };
 
+
     // Create VAO, VBO and EBO
     unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
