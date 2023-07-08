@@ -12,33 +12,25 @@ void Player::draw(Shader& shader, glm::mat4& view, glm::mat4& projection) {
     shader.setMat4("model", model);
     shader.setVec4("objectColor", glm::vec4(10.0f, 10.0f, 10.0f, 1.0f));
 
-    // Define the player as a simple 3D cuboid for now
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f, // front bottom-left corner
-         0.5f, -0.5f, -0.5f, // front bottom-right corner
-         0.5f,  0.5f, -0.5f, // front top-right corner
-        -0.5f,  0.5f, -0.5f, // front top-left corner
-        -0.5f, -0.5f,  0.5f, // back bottom-left corner
-         0.5f, -0.5f,  0.5f, // back bottom-right corner
-         0.5f,  0.5f,  0.5f, // back top-right corner
-        -0.5f,  0.5f,  0.5f  // back top-left corner
+        -0.5f, -0.5f, -0.5f, // bottom left front
+         0.5f, -0.5f, -0.5f, // bottom right front
+         0.0f,  0.5f, -0.5f, // top center front
+        -0.5f, -0.5f,  0.5f, // bottom left back
+         0.5f, -0.5f,  0.5f, // bottom right back
+         0.0f,  0.5f,  0.5f  // top center back
     };
 
     unsigned int indices[] = {
         0, 1, 2, // front face
-        2, 3, 0, // front face
-        4, 5, 6, // back face
-        6, 7, 4, // back face
-        0, 1, 5, // bottom face
-        5, 4, 0, // bottom face
-        3, 2, 6, // top face
-        6, 7, 3, // top face
-        0, 4, 7, // left face
-        7, 3, 0, // left face
-        1, 5, 6, // right face
-        6, 2, 1  // right face
+        3, 4, 5, // back face
+        0, 1, 4, // bottom face
+        4, 3, 0, // bottom face
+        0, 2, 5, // left face
+        5, 3, 0, // left face
+        1, 2, 5, // right face
+        5, 4, 1  // right face
     };
-
 
     // Create VAO, VBO and EBO
     unsigned int VAO, VBO, EBO;

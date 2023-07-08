@@ -44,32 +44,36 @@ void GameLoop::run() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        double aspectRatio = ((double)window->getWidth()) / window->getHeight();
+        // added this condition to avoid abort error
+        if (window->getWidth() && window->getHeight()) {
+            double aspectRatio = ((double)window->getWidth()) / window->getHeight();
 
-        glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->zoom), (float)aspectRatio, 0.1f, 200.0f);
-        shader->setMat4("projection", projectionMatrix);
 
-        glm::mat4 viewMatrix = camera->getViewMatrix();
-        shader->setMat4("view", viewMatrix);
+            glm::mat4 projectionMatrix = glm::perspective(glm::radians(camera->zoom), (float)aspectRatio, 0.1f, 200.0f);
+            shader->setMat4("projection", projectionMatrix);
 
-        glm::mat4 modelMatrix = glm::mat4(1.0f);
-        shader->setMat4("model", modelMatrix);
+            glm::mat4 viewMatrix = camera->getViewMatrix();
+            shader->setMat4("view", viewMatrix);
 
-        if (!camera->isWalkingMode) {
-            player->draw(*shader, viewMatrix, projectionMatrix);
+            glm::mat4 modelMatrix = glm::mat4(1.0f);
+            shader->setMat4("model", modelMatrix);
+
+            if (!camera->isWalkingMode) {
+                player->draw(*shader, viewMatrix, projectionMatrix);
+            }
+
+            glm::vec3 lightPos = glm::vec3(0.0f, 10.0f, 0.0f);
+            glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); // brighter white light
+
+            Lighting lighting(lightPos, lightColor);
+
+            shader->setVec4("objectColor", glm::vec4(0.5f, 1.25f, 0.25f, 1.0f)); // darker green color for the chunk
+            lighting.setLight(*shader);
+            chunk->drawChunk(modelMatrix, viewMatrix, projectionMatrix);
+
+            sensor.update();
+
+            frames++; // Increment the frame counter
         }
-
-        glm::vec3 lightPos = glm::vec3(0.0f, 10.0f, 0.0f);
-        glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f); // brighter white light
-
-        Lighting lighting(lightPos, lightColor);
-
-        shader->setVec4("objectColor", glm::vec4(0.5f, 1.25f, 0.25f, 1.0f)); // darker green color for the chunk
-        lighting.setLight(*shader);
-        chunk->drawChunk(modelMatrix, viewMatrix, projectionMatrix);
-
-        sensor.update();
-
-        frames++; // Increment the frame counter
-    }
+        }
 }

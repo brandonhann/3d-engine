@@ -22,7 +22,13 @@ Game::~Game() {
 }
 
 void Game::run() {
-    gameLoop.run();
+    while (!window.shouldClose()) {
+        if (glfwGetWindowAttrib(window.getWindow(), GLFW_ICONIFIED)) {
+            // If the window is minimized, don't perform rendering
+            continue;
+        }
+        gameLoop.run();
+    }
 }
 
 int main() {

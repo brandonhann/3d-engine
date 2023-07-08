@@ -3,7 +3,7 @@
 Chunk::Chunk(Shader& shader, float width, float length, glm::vec2 position)
     : shader(shader), width(width), length(length), noiseGenerator(FastNoiseLite()), position(glm::vec3(static_cast<float>(position.x), 0.0f, static_cast<float>(position.y))) {
     noiseGenerator.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-    noiseGenerator.SetSeed(42);
+    noiseGenerator.SetSeed(phi);
     noiseGenerator.SetFrequency(0.02f);
 
     generateVertices();

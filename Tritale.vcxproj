@@ -140,7 +140,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Config.h" />
     <ClCompile Include="Dependencies\imgui\include\imgui.cpp" />
     <ClCompile Include="Dependencies\imgui\include\imgui_demo.cpp" />
     <ClCompile Include="Dependencies\imgui\include\imgui_draw.cpp" />
@@ -148,6 +147,7 @@
     <ClCompile Include="Dependencies\imgui\include\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Dependencies\imgui\include\imgui_tables.cpp" />
     <ClCompile Include="Dependencies\imgui\include\imgui_widgets.cpp" />
+    <ClCompile Include="src\Config.h" />
     <ClCompile Include="src\Physics.cpp" />
     <ClCompile Include="src\player\Sensor.h" />
     <ClCompile Include="src\GameLoop.cpp" />
